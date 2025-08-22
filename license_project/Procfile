@@ -1,0 +1,1 @@
+web: gunicorn license_project.wsgi
