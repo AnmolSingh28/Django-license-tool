@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block page_title %}Your Licenses{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    {% if is_admin %}
+        <a href="{% url 'create-license' %}" class="btn btn-primary mb-3">
+            <i class="fas fa-plus-circle me-2"></i> Create New License
+        </a>
+    {% endif %}
+    {% if licenses %}
+        <div class="table-responsive bg-white rounded shadow-sm">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th scope="col">Key</th>
+                        {% if is_admin %}
+                        <th scope="col">User</th>
+                        {% endif %}
+                        <th scope="col">Status</th>
+                        <th scope="col">Expires</th>
+                        <th scope="col">Valid?</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for license in licenses %}
+                        <tr>
+                            <td>
+                                {% if license.is_key_decrypted %} 
+                                    <span class="text-success fw-bold">{{ license.displayed_key }}</span>
+                                {% else %}
+                                    <span>{{ license.displayed_key }}</span>
+                                    {% if license.view_password_hash %}
+                                        <button type="button" class="btn btn-sm btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#viewKeyModal-{{ license.id }}">
+                                            View Key
+                                        </button>
+                                    {% else %}
+                                        <span class="text-muted ms-2">(No view password set)</span>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            {% if is_admin %}
+                            <td>{{ license.user.username }}</td>
+                            {% endif %}
+                            <td>
+                                <span class="badge 
+                                    {% if license.status == 'active' %}bg-success
+                                    {% elif license.status == 'expired' %}bg-warning text-dark
+                                    {% elif license.status == 'revoked' %}bg-danger
+                                    {% endif %}">
+                                    {{ license.status|capfirst }}
+                                </span>
+                            </td>
+                            <td>{{ license.expires_at|date:"Y-m-d" }}</td>
+                            <td>{% if license.is_valid %}✅{% else %}❌{% endif %}</td>
+                            <td>
+                                {% if license.user == request.user or request.user.is_staff %}
+                                    <a href="{% url 'renew-license' license.pk %}" 
+                                       class="btn btn-sm btn-warning"
+                                       title="Renew License">
+                                        <i class="fas fa-calendar-plus"></i> Renew
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <div class="modal fade" id="viewKeyModal-{{ license.id }}" tabindex="-1" aria-labelledby="viewKeyModalLabel-{{ license.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form method="POST" action="{% url 'license-list' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="view_license_key" value="true">
+                                        <input type="hidden" name="license_id" value="{{ license.id }}">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="viewKeyModalLabel-{{ license.id }}">View License Key for {{ license.user.username }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Enter the view password for this license to reveal the key.</p>
+                                            <div class="mb-3">
+                                                <label for="view_password-{{ license.id }}" class="form-label">View Password:</label>
+                                                <input type="password" class="form-control" id="view_password-{{ license.id }}" name="view_password" required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Reveal Key</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center" role="alert">
+            <p class="mb-0">No licenses found.</p>
+        </div>
+    {% endif %}
+    <div class="text-center mt-4">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i> Back to Home
+        </a>
+    </div>
+</div>
+{% endblock %}

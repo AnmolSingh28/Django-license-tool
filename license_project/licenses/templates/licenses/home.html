@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Welcome to License Manager 👋</h2> 
+    {% if has_license %}
+        <a href="{% url 'license-list' %}" class="btn btn-primary">
+            View Licenses
+        </a>
+    {% endif %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if not user.is_superuser and not has_license %}
+        <div class="card shadow-sm mt-4 p-4"> 
+            <h2 class="text-center mb-4">Request a License</h2>
+            <form method="POST" action="{% url 'license-request' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="requesterEmail" class="form-label">Your Email:</label>
+                    <input type="email" class="form-control" id="requesterEmail" name="requester_email" placeholder="Enter your email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="requirements" class="form-label">License Requirements:</label>
+                    <textarea class="form-control" id="requirements" name="requirements" rows="5" placeholder="Enter license requirements" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Send Request</button>
+            </form>
+
+        </div>
+    {% elif user.is_superuser %}
+        <div class="card shadow-sm mt-4 p-4 text-center"> 
+            <p class="mb-3">As an administrator, you manage licenses. You can:</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a href="/admin/" class="btn btn-info me-md-2">Go to Admin Panel</a>
+                <a href="{% url 'create-license' %}" class="btn btn-success">Create New License</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

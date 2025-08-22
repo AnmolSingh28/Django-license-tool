@@ -1,0 +1,42 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Create New License</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <form method="POST" action="{% url 'create-license' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="user_id" class="form-label">Assign to User:</label>
+            <select name="user_id" id="user_id" class="form-select rounded-md p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                {% for user_obj in users %}
+                    <option value="{{ user_obj.id }}" {% if user_obj.id|stringformat:"s" == preselected_user %}selected{% endif %}>
+                        {{ user_obj.username }} ({{ user_obj.email }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="initial_view_password" class="form-label">Initial View Password for Key:</label>
+            <input type="password" class="form-control rounded-md p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" id="initial_view_password" name="initial_view_password" placeholder="Set initial password to view this key" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="days" class="form-label">Duration (Days):</label>
+            <input type="number" class="form-control rounded-md p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" id="days" name="days" value="365" required>
+        </div>
+        
+        <button type="submit" class="btn btn-success rounded-md px-4 py-2 bg-green-600 text-white font-semibold hover:bg-green-700 transition duration-200">Create License</button>
+        <button type="submit" name="create_another" class="btn btn-info rounded-md px-4 py-2 ms-2">Create Another</button>
+        <a href="{% url 'license-list' %}" class="btn btn-secondary rounded-md px-4 py-2 ms-2">View All Licenses</a>
+    </form>
+</div>
+{% endblock %}

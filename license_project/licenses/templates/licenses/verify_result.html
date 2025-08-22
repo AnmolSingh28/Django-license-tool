@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>License Verification</h2>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Key: {{ license.key }}</h5>
+        <p class="card-text">
+            Status: <span class="badge bg-{% if license.is_valid %}success{% else %}danger{% endif %}">
+                {% if license.is_valid %}Valid{% else %}Invalid{% endif %}
+            </span>
+        </p>
+        <p>User: {{ license.user.email }}</p>
+        <p>Expires: {{ license.expires_at|date:"Y-m-d" }}</p>
+    </div>
+</div>
+{% endblock %}

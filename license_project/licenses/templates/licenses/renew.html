@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Renew License{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm p-4">
+                <h4 class="card-title text-center mb-4">Renew License for {{ license.user.username }}</h4>
+                <div class="card-body">
+                    <p class="mb-3">
+                        <strong>License ID:</strong> {{ license.id }}<br>
+                        <strong>License Name:</strong> 
+                        {% if license.is_key_decrypted %}
+                            {{ license.displayed_key|slice:":12" }}...
+                        {% else %}
+                            Key for {{ license.user.username }}
+                        {% endif %}
+                        <br>
+                        <strong>Current Expiry:</strong> {{ license.expires_at|date:"Y-m-d" }}
+                    </p>
+                    <form method="POST" action="{% url 'renew-license' license.pk %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="days" class="form-label">Extend by (days):</label>
+                            <input type="number" class="form-control" id="days" name="days" value="{{ default_days }}" min="1" required>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sync-alt me-2"></i> Renew License
+                            </button>
+                            <a href="{% url 'license-list' %}" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
