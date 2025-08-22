@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-ncwv=&7_b96444031^2ssq)n*6!3oxv01jdbqschytjv#l^i@r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["render.com",'<your-app-name>.onrender.com']  
+ALLOWED_HOSTS = ["render.com",'https://django-license-tool.onrender.com']  
 
 
 # Application definition
