@@ -8,6 +8,7 @@ Django==5.2.5
 django-ratelimit==4.1.0
 djangorestframework==3.16.1
 djangorestframework_simplejwt==5.5.1
+gunicorn
 pycparser==2.22
 PyJWT==2.10.1
 python-dateutil==2.9.0.post0
