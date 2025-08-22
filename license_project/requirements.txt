@@ -12,6 +12,9 @@ pycparser==2.22
 PyJWT==2.10.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.1
+psycopg2-binary
+
+
 six==1.17.0
 sqlparse==0.5.3
 tzdata==2025.2
