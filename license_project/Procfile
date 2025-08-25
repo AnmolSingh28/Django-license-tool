@@ -1,1 +1,1 @@
-web: gunicorn license_project.wsgi
+web: gunicorn license_project.wsgi:application --bind 0.0.0.0:$PORT
