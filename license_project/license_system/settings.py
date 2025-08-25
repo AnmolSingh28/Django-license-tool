@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [ '127.0.0.1',
-    'localhost','https://django-license-tool.onrender.com']  
+    'localhost','django-license-tool.onrender.com']  
 
 
 # Application definition
@@ -69,8 +69,7 @@ MIDDLEWARE = [
 ]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ROOT_URLCONF = 'license_system.urls'
-import os
-BASE_DIR = Path(__file__).resolve().parent.parent
+
 TEMPLATES=[
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
