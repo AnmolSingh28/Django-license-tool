@@ -30,7 +30,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [ '127.0.0.1',
-    'localhost','django-license-tool.onrender.com']  
+    'localhost',os.environ.get('RENDER_EXTERNAL_HOSTNAME'),
+    ]  
 
 
 # Application definition
