@@ -161,7 +161,7 @@ EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST ='smtp-relay.brevo.com' 
 EMAIL_PORT =587
 EMAIL_USE_TLS =True
-EMAIL_HOST_USER = os.envrion.get('EMAIL_HOST_USER')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 BREVO_API_KEY=os.environ.get('BREVO_API_KEY')
 DEFAULT_FROM_EMAIL =EMAIL_HOST_USER
 
